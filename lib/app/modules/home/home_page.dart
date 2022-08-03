@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           store.increment();
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
