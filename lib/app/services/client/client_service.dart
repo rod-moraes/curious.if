@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import "package:http/http.dart" show Client, Response;
@@ -15,11 +16,13 @@ class HttpClient implements ClientService {
   Future<String> post(Uri url,
       {Map<String, String>? headers, Object? body}) async {
     try {
-      Response response = await client.post(
-        url,
-        headers: headers,
-        body: body,
-      );
+      Response response = await client
+          .post(
+            url,
+            headers: headers,
+            body: body,
+          )
+          .timeout(const Duration(seconds: 5));
       if (response.statusCode == 201 || response.statusCode == 200) {
         return response.body;
       } else if (response.statusCode == 400 || response.statusCode == 401) {
@@ -28,6 +31,9 @@ class HttpClient implements ClientService {
         throw "Erro na conexão da API (Status: ${response.statusCode})";
       }
     } catch (e) {
+      if (e is TimeoutException) {
+        throw "Falha ao receber resposta em tempo hábil!";
+      }
       rethrow;
     }
   }

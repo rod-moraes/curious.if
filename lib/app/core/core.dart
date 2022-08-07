@@ -6,3 +6,4 @@ export './theme/app_text_styles.dart';
 export './theme/app_theme.dart';
 export 'utils_const.dart';
 export 'theme/widgets/theme_store.dart';
+export '../app_routes.dart';

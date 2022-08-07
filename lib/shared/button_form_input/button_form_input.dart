@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
 
-class ButtonFormInput extends StatelessWidget {
-  final Function onTap;
+import '../../app/core/core.dart';
+
+class ButtonFormInput extends StatefulWidget {
+  final Future<void> Function() onTap;
   final String text;
-  final bool isLoading;
   const ButtonFormInput({
     Key? key,
     required this.onTap,
-    this.isLoading = false,
     required this.text,
   }) : super(key: key);
 
   @override
+  State<ButtonFormInput> createState() => _ButtonFormInputState();
+}
+
+class _ButtonFormInputState extends State<ButtonFormInput> {
+  bool isLoading = false;
+  @override
   Widget build(BuildContext context) {
     return isLoading
-        ? SizedBox(
+        ? const SizedBox(
             height: 60, child: Center(child: CircularProgressIndicator()))
         : Row(
             children: [
@@ -25,14 +31,28 @@ class ButtonFormInput extends StatelessWidget {
                         RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     )),
-                    // backgroundColor: MaterialStateProperty.all(
-                    //     AppTheme.colors.backgroundButton),
+                    backgroundColor: MaterialStateProperty.all(
+                      Theme.of(context).colorScheme.primaryContainer,
+                    ),
                   ),
-                  onPressed: () => onTap(),
+                  onPressed: () async {
+                    isLoading = true;
+                    if (mounted) setState(() {});
+                    await widget.onTap();
+                    isLoading = false;
+                    if (mounted) {
+                      setState(() {
+                        FocusScope.of(context).unfocus();
+                      });
+                    }
+                  },
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 12),
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                     child: Text(
-                      text,
+                      widget.text,
+                      style: AppTheme.textStyles.labelMediumSemiBold.copyWith(
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer),
                     ),
                   ),
                 ),

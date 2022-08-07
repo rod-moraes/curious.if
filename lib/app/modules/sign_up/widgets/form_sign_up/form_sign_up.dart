@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
+
 import '../../../../../shared/button_form_input/button_form_input.dart';
 import '../../../../../shared/text_form_input/text_form_input.dart';
-import '../../../../core/core.dart';
-import 'form_login_controller.dart';
+import 'form_sign_up_controller.dart';
 
-class FormLoginWidget extends StatefulWidget {
-  final String initialEmail;
+class FormSignUpWidget extends StatefulWidget {
   final Future Function(Map<String, dynamic>) onSaved;
-  const FormLoginWidget({
+  final String initialEmail;
+  final String initialPassword;
+  const FormSignUpWidget({
     Key? key,
-    required this.initialEmail,
     required this.onSaved,
+    required this.initialEmail,
+    required this.initialPassword,
   }) : super(key: key);
 
   @override
-  State<FormLoginWidget> createState() => _FormLoginWidgetState();
+  State<FormSignUpWidget> createState() => _FormSignUpWidgetState();
 }
 
-class _FormLoginWidgetState extends State<FormLoginWidget> {
+class _FormSignUpWidgetState extends State<FormSignUpWidget> {
   final _formKey = GlobalKey<FormState>();
-  final controller = Modular.get<FormLoginController>();
+  final FormSignUpController controller = FormSignUpController();
   bool isLoading = false;
+  Future? onTapCancel;
 
   @override
   void dispose() {
@@ -37,75 +39,55 @@ class _FormLoginWidgetState extends State<FormLoginWidget> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
       child: Column(
         children: [
           TextFormInput(
+            text: '',
+            disable: isLoading,
+            hintText: 'Nome',
+            icon: const Icon(Icons.person_outline, size: 22),
+            validate: controller.validateName,
+            onSaved: controller.savedName,
+          ),
+          const SizedBox(height: 8),
+          TextFormInput(
             text: widget.initialEmail,
             disable: isLoading,
             hintText: 'E-mail',
-            icon: const Icon(Icons.email_outlined, size: 22),
+            icon: Icon(Icons.email_outlined, size: 22),
             validate: controller.validateEmail,
             onSaved: controller.savedEmail,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           TextFormInput(
-            text: '',
+            text: widget.initialPassword,
             disable: isLoading,
             hintText: 'Senha',
-            icon: const Icon(Icons.lock_outline, size: 22),
+            icon: Icon(Icons.lock_outline, size: 22),
             validate: controller.validatePassword,
             onSaved: controller.savedPassword,
             password: true,
           ),
-          const SizedBox(height: 48),
+          const SizedBox(height: 32),
           ButtonFormInput(
-            text: "Login",
+            text: "Cadastrar",
             onTap: () async {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
                 modifyLoading(true);
-                await widget.onSaved({
+                onTapCancel = await widget.onSaved({
                   "email": controller.email,
+                  "name": controller.name,
                   "password": controller.password
                 });
-
                 _formKey.currentState!.reset();
                 controller.reset();
                 modifyLoading(false);
               }
             },
-          ),
-          const SizedBox(height: 10),
-          Text(
-            "Ainda não possui uma conta?",
-            textAlign: TextAlign.center,
-            style: AppTheme.textStyles.labelMediumSemiBold
-                .copyWith(color: Theme.of(context).colorScheme.outline),
-          ),
-          const SizedBox(height: 6),
-          InkWell(
-            borderRadius: BorderRadius.circular(50),
-            onTap: () {
-              _formKey.currentState!.save();
-              controller.register();
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Text(
-                "Cadastre-se",
-                textAlign: TextAlign.center,
-                style: AppTheme.textStyles.labelMediumSemiBold
-                    .copyWith(color: Theme.of(context).colorScheme.primary),
-              ),
-            ),
           ),
         ],
       ),

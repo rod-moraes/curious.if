@@ -3,7 +3,9 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:sizer/sizer.dart';
 
+import 'app_module.dart';
 import 'core/core.dart';
+import 'core/theme/color_scheme.g.dart';
 
 class AppWidget extends StatefulWidget {
   const AppWidget({Key? key}) : super(key: key);
@@ -13,34 +15,47 @@ class AppWidget extends StatefulWidget {
 }
 
 class _AppWidgetState extends State<AppWidget> {
-  final themeStore = Modular.get<ThemeStore>();
+  late Future<void> future;
+  late ThemeStore themeStore;
+  Future<void> frameFuture() async {
+    await Modular.isModuleReady<AppModule>();
+    themeStore = Modular.get<ThemeStore>();
+    themeStore.listenBrightnessSystem();
+    await themeStore.currentThemeMode();
+  }
+
   @override
   void initState() {
-    themeStore.listenBrightnessSystem();
+    future = frameFuture();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: themeStore.currentThemeMode(),
+        future: future,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData &&
-              snapshot.data != null) {
-            return Observer(builder: (context) {
-              return Sizer(builder: (_, __, ___) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            Modular.to.addListener(() {
+              print(Modular.to.path);
+            });
+            return Sizer(builder: (_, __, ___) {
+              return Observer(builder: (context) {
                 return MaterialApp.router(
                   title: 'Curious.IF',
                   themeMode: themeStore.themeMode,
                   theme: ThemeData(
-                    colorSchemeSeed: AppTheme.colors.colorSchemeSeed,
+                    colorScheme: lightColorScheme,
                     useMaterial3: true,
+                    backgroundColor: lightColorScheme.background,
+                    scaffoldBackgroundColor: lightColorScheme.background,
                   ),
                   darkTheme: ThemeData(
-                    colorSchemeSeed: AppTheme.colors.colorSchemeSeed,
+                    colorScheme: darkColorScheme,
                     useMaterial3: true,
                     brightness: Brightness.dark,
+                    backgroundColor: darkColorScheme.background,
+                    scaffoldBackgroundColor: darkColorScheme.background,
                   ),
                   routeInformationParser: Modular.routeInformationParser,
                   routerDelegate: Modular.routerDelegate,

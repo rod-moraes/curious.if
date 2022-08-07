@@ -1,6 +1,6 @@
 import 'package:curious_if/app/domain/auth/usecase/auth_usecase.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobx/mobx.dart';
 
 import '../../domain/auth/model/auth_model.dart';
@@ -38,8 +38,26 @@ abstract class _AuthStoreBase with Store {
     }
   }
 
+  void navigateAuth(UserModel user) =>
+      Modular.to.navigate('', arguments: {"user": user});
+
+  void autoRun(void Function(String, bool) showSnackBar) {
+    disposer = autorun((_) {
+      if (state is AuthStateFailure) {
+        String message = (state as AuthStateFailure).message;
+        _modifyAuthState(AuthStateEmpty());
+        showSnackBar(message, true);
+      } else if (state is AuthStateSuccess) {
+        UserModel user = (state as AuthStateSuccess).user;
+        _modifyAuthState(AuthStateEmpty());
+        showSnackBar("Logado com sucesso!!!", false);
+        //navigateAuth(user);
+      }
+    });
+  }
+
   void dispose() {
     _authUseCase.dispose();
-    disposer.reaction.dispose();
+    disposer();
   }
 }

@@ -7,7 +7,7 @@ abstract class AppColors {
 
 class AppColorsLight implements AppColors {
   @override
-  Color get colorSchemeSeed => const Color(0xff006C4D);
+  Color get colorSchemeSeed => const Color(0xff05A678);
 
   @override
   Color get background => const Color(0xfffbfdf9);
@@ -15,7 +15,7 @@ class AppColorsLight implements AppColors {
 
 class AppColorsDark implements AppColors {
   @override
-  Color get colorSchemeSeed => const Color(0xff006C4D);
+  Color get colorSchemeSeed => const Color(0xff05A678);
 
   @override
   Color get background => const Color(0xff3E3B47);

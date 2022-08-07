@@ -1,8 +1,8 @@
-import 'package:curious_if/app/domain/auth/repository/auth_repository.dart';
-import 'package:curious_if/app/domain/auth/usecase/auth_usecase.dart';
-import 'package:curious_if/app/modules/auth/auth_page.dart';
-import 'package:curious_if/app/services/email/email_validator_service.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import '../../domain/auth/repository/auth_repository.dart';
+import '../../domain/auth/usecase/auth_usecase.dart';
+import '../../services/email/email_validator_service.dart';
+import 'auth_page.dart';
 import 'auth_store.dart';
 import 'widgets/form_login/form_login_controller.dart';
 
@@ -19,7 +19,9 @@ class AuthModule extends Module {
 
   @override
   final List<ModularRoute> routes = [
-    ChildRoute(Modular.initialRoute,
-        child: (_, args) => AuthPage(email: args.data ?? '')),
+    ChildRoute("/", child: (_, args) {
+      String email = (args.data is Map) ? (args.data?["email"] ?? '') : '';
+      return AuthPage(email: email);
+    }),
   ];
 }

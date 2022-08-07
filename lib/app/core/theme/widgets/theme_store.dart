@@ -4,11 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../services/local_preferences/local_preferences_service.dart';
+
 part 'theme_store.g.dart';
 
-class ThemeStore = ThemeStoreBase with _$ThemeStore;
+class ThemeStore extends ThemeStoreBase with _$ThemeStore {
+  ThemeStore({required LocalPreferencesService instance}) {
+    _instance = instance;
+  }
+}
 
 abstract class ThemeStoreBase with Store {
+  late LocalPreferencesService _instance;
   // TEMA ATUAL DO APLICATIVO (É OBSERVADO PELO MOBX)
   @observable
   ThemeMode? _themeMode;
@@ -69,8 +77,7 @@ abstract class ThemeStoreBase with Store {
   // ALTERA O TEMA SALVO NO SHARED PREFERENCES E MUDA O THEME NO CONTROLLER
   Future<void> saveThemeMode(ThemeMode themeModeModify) async {
     try {
-      final SharedPreferences instance = await SharedPreferences.getInstance();
-      await instance.setString("themeMode", themeModeModify.index.toString());
+      await _instance.setString("themeMode", themeModeModify.index.toString());
       _themeMode = themeModeModify;
     } catch (e) {
       rethrow;
@@ -81,9 +88,8 @@ abstract class ThemeStoreBase with Store {
   Future<bool> currentThemeMode() async {
     try {
       late bool result;
-      final SharedPreferences instance = await SharedPreferences.getInstance();
-      if (instance.containsKey("themeMode")) {
-        int index = int.parse(instance.get("themeMode") as String);
+      if (_instance.containsKey("themeMode")) {
+        int index = int.parse(_instance.getString("themeMode") ?? '0');
         if (index == ThemeMode.dark.index) {
           result = await setThemeMode(ThemeMode.dark);
         } else if (index == ThemeMode.light.index) {
@@ -128,5 +134,9 @@ abstract class ThemeStoreBase with Store {
       Brightness brightness = window.platformBrightness;
       if (themeMode == ThemeMode.system) setBrightness(brightness);
     };
+  }
+
+  void dispose() {
+    _instance.dispose();
   }
 }

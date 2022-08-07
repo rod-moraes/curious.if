@@ -66,7 +66,8 @@ class _TextFormInputState extends State<TextFormInput> {
       ? OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(
-            width: 1,
+            width: 0,
+            color: Theme.of(context).colorScheme.background,
           ),
         )
       : InputBorder.none;
@@ -100,8 +101,8 @@ class _TextFormInputState extends State<TextFormInput> {
               : TextInputType.text,
           style: widget.textStyle,
           decoration: InputDecoration(
+            fillColor: Theme.of(context).colorScheme.surface,
             labelText: widget.label,
-            hoverColor: Colors.white,
             filled: true,
             labelStyle: widget.textStyle,
             prefixIcon: widget.icon,

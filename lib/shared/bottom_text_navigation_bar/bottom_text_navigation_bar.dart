@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../../app/core/core.dart';
+
 class BottomTextNavigationBar extends StatelessWidget {
   final String text;
-  final Icon icon;
   final VoidCallback onTap;
+  final IconData icon;
+  final double size;
   const BottomTextNavigationBar({
     Key? key,
     required this.text,
     required this.icon,
     required this.onTap,
+    this.size = 18,
   }) : super(key: key);
 
   @override
@@ -20,11 +24,22 @@ class BottomTextNavigationBar extends StatelessWidget {
       child: TextButton.icon(
         onPressed: () => onTap(),
         style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(
+            Theme.of(context).colorScheme.surface,
+          ),
+          shape: MaterialStateProperty.all(const RoundedRectangleBorder()),
           padding: MaterialStateProperty.all(EdgeInsets.only(bottom: padding)),
         ),
-        icon: icon,
+        icon: Icon(
+          icon,
+          size: size,
+          color: Theme.of(context).colorScheme.onSurface,
+        ),
         label: Text(
           text,
+          style: AppTheme.textStyles.labelMedium.copyWith(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
       ),
     );

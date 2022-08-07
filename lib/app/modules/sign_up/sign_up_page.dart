@@ -1,35 +1,31 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:sizer/sizer.dart';
+
 import '../../../shared/bottom_text_navigation_bar/bottom_text_navigation_bar.dart';
 import '../../../shared/snack_bar_info/snack_bar_info.dart';
 import '../../core/core.dart';
-import '../../domain/auth/model/auth_model.dart';
-import 'auth_store.dart';
-import 'widgets/form_login/form_login.dart';
+import '../../domain/signup/model/sign_up_model.dart';
+import 'sign_up_store.dart';
+import 'widgets/form_sign_up/form_sign_up.dart';
 
-class AuthPage extends StatefulWidget {
-  final String email;
-  const AuthPage({
+class SignUpPage extends StatefulWidget {
+  final String initialEmail;
+  final String initialPassword;
+  const SignUpPage({
     Key? key,
-    this.email = '',
+    this.initialEmail = '',
+    this.initialPassword = '',
   }) : super(key: key);
 
   @override
-  State<AuthPage> createState() => _AuthPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _AuthPageState extends State<AuthPage> {
-  final store = Modular.get<AuthStore>();
+class _SignUpPageState extends State<SignUpPage> {
+  final store = Modular.get<SignUpStore>();
   final storeTheme = Modular.get<ThemeStore>();
-
-  @override
-  void initState() {
-    store.autoRun(showSnackBar);
-    super.initState();
-  }
 
   void showSnackBar(String text, bool isError) {
     ScaffoldMessenger.of(context)
@@ -44,13 +40,20 @@ class _AuthPageState extends State<AuthPage> {
       MediaQuery.of(context).size.width * porcentagem / 100;
 
   @override
+  void initState() {
+    store.autoRun(showSnackBar);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print("Aaaa TEste2");
+    print("Aaaa TEste");
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: storeTheme.colorStatus,
       sized: false,
       child: Scaffold(
+        backgroundColor: AppTheme.colors.background,
         body: SafeArea(
           child: ListView(
             physics: const BouncingScrollPhysics(),
@@ -59,43 +62,36 @@ class _AuthPageState extends State<AuthPage> {
             children: [
               AnimatedContainer(
                 height: isKeyboard ? 20 : 70,
-                constraints: BoxConstraints(maxHeight: height(7)),
+                constraints: BoxConstraints(maxHeight: 7.h),
                 duration: const Duration(milliseconds: 150),
+                // Provide an optional curve to make the animation feel smoother.
                 curve: Curves.linear,
               ),
               Container(
-                padding: EdgeInsets.symmetric(
-                    horizontal: max(width(14), width(50) - 400)),
-                child: Image.asset(
-                  AppTheme.images.logo,
-                  filterQuality: FilterQuality.high,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 15.w),
+                child: Image.asset(AppTheme.images.logo),
               ),
               AnimatedContainer(
-                height: isKeyboard ? 32 : 95,
-                constraints: BoxConstraints(maxHeight: height(7)),
+                height: isKeyboard ? 35 : 95,
+                constraints: BoxConstraints(maxHeight: 5.h * 100.h / 100.w),
                 duration: const Duration(milliseconds: 150),
+                // Provide an optional curve to make the animation feel smoother.
                 curve: Curves.linear,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: width(11)),
+                padding: EdgeInsets.symmetric(horizontal: 11.w),
                 child: Column(
                   children: [
-                    Text(
-                      "Login",
-                      style: AppTheme.textStyles.titleLarge,
+                    const Text(
+                      "Crie sua conta",
                     ),
-                    AnimatedContainer(
-                      height: isKeyboard ? 24 : 48,
-                      constraints: BoxConstraints(maxHeight: height(7)),
-                      duration: const Duration(milliseconds: 150),
-                      // Provide an optional curve to make the animation feel smoother.
-                      curve: Curves.linear,
-                    ),
-                    FormLoginWidget(
-                      initialEmail: widget.email,
-                      onSaved: (loginMap) async => await store.auth(
-                          authModel: AuthModel.fromMap(loginMap)),
+                    const SizedBox(height: 24),
+                    FormSignUpWidget(
+                      initialEmail: widget.initialEmail,
+                      initialPassword: widget.initialPassword,
+                      onSaved: (signUpMap) async => await store.signUp(
+                        signUpModel: SignUpModel.fromMap(signUpMap),
+                      ),
                     ),
                   ],
                 ),
@@ -105,10 +101,16 @@ class _AuthPageState extends State<AuthPage> {
         ),
         bottomNavigationBar: BottomTextNavigationBar(
           icon: Icons.arrow_back,
-          onTap: () => Modular.to.navigate('/'),
-          text: "Voltar para a home",
+          onTap: () => Modular.to.navigate('/${AppRoutes.auth}/'),
+          text: "Voltar para o login",
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    store.dispose();
+    super.dispose();
   }
 }
