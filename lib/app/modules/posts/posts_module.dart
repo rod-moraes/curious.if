@@ -14,7 +14,7 @@ class PostsModule extends Module {
     Bind.factory((i) => ReportsRepository(datasource: i())),
     Bind.factory((i) => PostUseCase(repository: i())),
     Bind.factory((i) => ReportsUseCase(repository: i())),
-    Bind.lazySingleton<PostsStore>(
+    Bind.singleton<PostsStore>(
         (i) =>
             PostsStore(postUsecase: i(), reportUsecase: i(), storePosts: i()),
         onDispose: (bloc) => bloc.dispose()),

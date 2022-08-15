@@ -12,9 +12,9 @@ class AuthModule extends Module {
     Bind.factory((i) => AuthRepository(i())),
     Bind.factory((i) => AuthUseCase(i())),
     Bind.factory((i) => EmailValidatorService()),
-    Bind.lazySingleton<AuthStore>((i) => AuthStore(i()),
+    Bind.singleton<AuthStore>((i) => AuthStore(i()),
         onDispose: (bloc) => bloc.dispose()),
-    Bind.lazySingleton((i) => FormLoginController(i()))
+    Bind.singleton((i) => FormLoginController(i()))
   ];
 
   @override

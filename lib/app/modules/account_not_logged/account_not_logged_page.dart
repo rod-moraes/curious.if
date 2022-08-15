@@ -61,7 +61,7 @@ class _AccountNotLoggedPageState extends State<AccountNotLoggedPage> {
               ),
               ButtonFormInput(
                   onTap: () async {
-                    Modular.to.navigate("/${AppRoutes.auth}");
+                    Modular.to.navigate("/${AppRoutes.auth}/");
                   },
                   text: "Fazer login"),
               SizedBox(height: 8),

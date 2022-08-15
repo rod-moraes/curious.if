@@ -113,7 +113,7 @@ class _AuthPageState extends State<AuthPage> {
         ),
         bottomNavigationBar: BottomTextNavigationBar(
           icon: Icons.arrow_back,
-          onTap: () => Modular.to.navigate('/'),
+          onTap: () => Modular.to.navigate("/posts/"),
           text: "Voltar para a home",
         ),
       ),

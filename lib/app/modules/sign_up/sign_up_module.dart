@@ -11,7 +11,7 @@ class SignUpModule extends Module {
   final List<Bind> binds = [
     Bind.factory((i) => SignUpRepository(i())),
     Bind.factory((i) => SignUpUseCase(i())),
-    Bind.lazySingleton<SignUpStore>((i) => SignUpStore(i()),
+    Bind.singleton<SignUpStore>((i) => SignUpStore(i()),
         onDispose: (bloc) => bloc.dispose()),
   ];
 
