@@ -45,6 +45,10 @@ dependencies:
   http: ^0.13.4
   email_validator: ^2.1.17
   intl: ^0.17.0
+  shimmer: ^2.0.0
+  like_button: ^2.0.4
+  font_awesome_flutter: ^10.1.0
+  asuka: ^2.0.1
 
 dev_dependencies:
   flutter_test:

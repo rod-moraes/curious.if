@@ -16,9 +16,9 @@ class AuthStore extends _AuthStoreBase with _$AuthStore {
 }
 
 abstract class _AuthStoreBase with Store {
-  late IAuthUseCase _authUseCase;
+  late final IAuthUseCase _authUseCase;
 
-  late ReactionDisposer disposer;
+  ReactionDisposer? disposer;
 
   @observable
   AuthState state = AuthStateEmpty();
@@ -38,8 +38,7 @@ abstract class _AuthStoreBase with Store {
     }
   }
 
-  void navigateAuth(UserModel user) =>
-      Modular.to.navigate('', arguments: {"user": user});
+  void navigateHome() => Modular.to.navigate('/');
 
   void autoRun(void Function(String, bool) showSnackBar) {
     disposer = autorun((_) {
@@ -51,13 +50,13 @@ abstract class _AuthStoreBase with Store {
         UserModel user = (state as AuthStateSuccess).user;
         _modifyAuthState(AuthStateEmpty());
         showSnackBar("Logado com sucesso!!!", false);
-        //navigateAuth(user);
+        navigateHome();
       }
     });
   }
 
   void dispose() {
     _authUseCase.dispose();
-    disposer();
+    if (disposer != null) disposer!();
   }
 }

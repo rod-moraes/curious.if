@@ -1,3 +1,4 @@
+import 'package:asuka/asuka.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -15,8 +16,8 @@ class AppWidget extends StatefulWidget {
 }
 
 class _AppWidgetState extends State<AppWidget> {
-  late Future<void> future;
-  late ThemeStore themeStore;
+  late final Future<void> future;
+  late final ThemeStore themeStore;
   Future<void> frameFuture() async {
     await Modular.isModuleReady<AppModule>();
     themeStore = Modular.get<ThemeStore>();
@@ -36,14 +37,19 @@ class _AppWidgetState extends State<AppWidget> {
         future: future,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
+            print("Uaia");
             Modular.to.addListener(() {
-              print(Modular.to.path);
+              print("Uai");
+              debugPrint(Modular.to.path);
             });
+            Modular.setObservers([Asuka.asukaHeroController]);
             return Sizer(builder: (_, __, ___) {
               return Observer(builder: (context) {
                 return MaterialApp.router(
+                  builder: Asuka.builder,
                   title: 'Curious.IF',
                   themeMode: themeStore.themeMode,
+                  debugShowCheckedModeBanner: false,
                   theme: ThemeData(
                     colorScheme: lightColorScheme,
                     useMaterial3: true,

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:curious_if/app/services/client/client_service.dart';
 
 import '../../../core/core.dart';
@@ -20,6 +22,13 @@ class AuthRepository implements IAuthRepository {
     try {
       String response = await _datasource.post(
         Uri.parse("${server}api/auth/login/"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'email': authModel.email,
+          'password': authModel.password,
+        }),
       );
       UserModel userModel = UserModel.fromJson(response);
       return userModel;

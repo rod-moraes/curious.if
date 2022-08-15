@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:asuka/asuka.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -28,7 +31,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final storeTheme = Modular.get<ThemeStore>();
 
   void showSnackBar(String text, bool isError) {
-    ScaffoldMessenger.of(context)
+    Asuka
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBarInfo(isError: isError, text: text));
   }
@@ -47,7 +50,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("Aaaa TEste");
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: storeTheme.colorStatus,
@@ -61,31 +63,39 @@ class _SignUpPageState extends State<SignUpPage> {
             reverse: true,
             children: [
               AnimatedContainer(
-                height: isKeyboard ? 20 : 70,
-                constraints: BoxConstraints(maxHeight: 7.h),
+                height: isKeyboard ? 25 : 70,
+                constraints: BoxConstraints(maxHeight: height(7)),
                 duration: const Duration(milliseconds: 150),
                 // Provide an optional curve to make the animation feel smoother.
                 curve: Curves.linear,
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 15.w),
+                padding: EdgeInsets.symmetric(
+                    horizontal: max(width(14), width(50) - 400)),
                 child: Image.asset(AppTheme.images.logo),
               ),
               AnimatedContainer(
-                height: isKeyboard ? 35 : 95,
-                constraints: BoxConstraints(maxHeight: 5.h * 100.h / 100.w),
+                height: isKeyboard ? 25 : 95,
+                constraints: BoxConstraints(maxHeight: height(7)),
                 duration: const Duration(milliseconds: 150),
                 // Provide an optional curve to make the animation feel smoother.
                 curve: Curves.linear,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 11.w),
+                padding: EdgeInsets.symmetric(horizontal: width(11)),
                 child: Column(
                   children: [
-                    const Text(
+                    Text(
                       "Crie sua conta",
+                      style: AppTheme.textStyles.titleLarge,
                     ),
-                    const SizedBox(height: 24),
+                    AnimatedContainer(
+                      height: isKeyboard ? 25 : 48,
+                      constraints: BoxConstraints(maxHeight: height(7)),
+                      duration: const Duration(milliseconds: 150),
+                      // Provide an optional curve to make the animation feel smoother.
+                      curve: Curves.linear,
+                    ),
                     FormSignUpWidget(
                       initialEmail: widget.initialEmail,
                       initialPassword: widget.initialPassword,
@@ -101,7 +111,9 @@ class _SignUpPageState extends State<SignUpPage> {
         ),
         bottomNavigationBar: BottomTextNavigationBar(
           icon: Icons.arrow_back,
-          onTap: () => Modular.to.navigate('/${AppRoutes.auth}/'),
+          onTap: () => Modular.to.navigate('/${AppRoutes.auth}/', arguments: {
+            'email': widget.initialEmail,
+          }),
           text: "Voltar para o login",
         ),
       ),

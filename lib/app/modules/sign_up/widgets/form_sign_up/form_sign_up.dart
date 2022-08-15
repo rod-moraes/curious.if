@@ -66,7 +66,7 @@ class _FormSignUpWidgetState extends State<FormSignUpWidget> {
             text: widget.initialPassword,
             disable: isLoading,
             hintText: 'Senha',
-            icon: Icon(Icons.lock_outline, size: 22),
+            icon: const Icon(Icons.lock_outline, size: 22),
             validate: controller.validatePassword,
             onSaved: controller.savedPassword,
             password: true,

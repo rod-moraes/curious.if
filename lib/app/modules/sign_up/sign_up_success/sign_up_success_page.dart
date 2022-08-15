@@ -5,7 +5,6 @@ import 'package:sizer/sizer.dart';
 import '../../../../shared/bottom_text_navigation_bar/bottom_text_navigation_bar.dart';
 import '../../../../shared/button_form_input/button_form_input.dart';
 import '../../../core/core.dart';
-import 'sign_up_success_controller.dart';
 
 class SignUpSuccessPage extends StatelessWidget {
   final String email;
@@ -16,7 +15,6 @@ class SignUpSuccessPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SignUpSuccessController _controller = SignUpSuccessController();
     final storeTheme = Modular.get<ThemeStore>();
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -53,6 +51,7 @@ class SignUpSuccessPage extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 4.w),
                         child: Text(
                           "Aguarde até que um moderador aprove seu cadastro",
+                          style: AppTheme.textStyles.labelMedium,
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -61,7 +60,10 @@ class SignUpSuccessPage extends StatelessWidget {
                   SizedBox(height: 18.h),
                   ButtonFormInput(
                     text: "Saquei!",
-                    onTap: () async => _controller.navigationLogin(email),
+                    onTap: () async => Modular.to.navigate(
+                      "/${AppRoutes.auth}/",
+                      arguments: {"email": email},
+                    ),
                   ),
                 ],
               ),
@@ -70,7 +72,7 @@ class SignUpSuccessPage extends StatelessWidget {
         ),
         bottomNavigationBar: BottomTextNavigationBar(
           icon: Icons.arrow_back,
-          onTap: () => Modular.to.pop(),
+          onTap: () => Modular.to.navigate("./"),
           text: "Voltar para o cadastro",
         ),
       ),

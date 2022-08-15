@@ -1,5 +1,4 @@
 import '../model/auth_model.dart';
-import '../model/roles_permission_model.dart';
 import '../model/user_model.dart';
 import '../repository/auth_repository.dart';
 

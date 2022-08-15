@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../services/local_preferences/local_preferences_service.dart';
 
@@ -16,7 +15,7 @@ class ThemeStore extends ThemeStoreBase with _$ThemeStore {
 }
 
 abstract class ThemeStoreBase with Store {
-  late LocalPreferencesService _instance;
+  late final LocalPreferencesService _instance;
   // TEMA ATUAL DO APLICATIVO (É OBSERVADO PELO MOBX)
   @observable
   ThemeMode? _themeMode;
@@ -87,7 +86,7 @@ abstract class ThemeStoreBase with Store {
   // PEGA O TEMA CASO EXISTA NO SHARED PREFERENCES
   Future<bool> currentThemeMode() async {
     try {
-      late bool result;
+      late final bool result;
       if (_instance.containsKey("themeMode")) {
         int index = int.parse(_instance.getString("themeMode") ?? '0');
         if (index == ThemeMode.dark.index) {

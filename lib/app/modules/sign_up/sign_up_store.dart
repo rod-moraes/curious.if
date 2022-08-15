@@ -16,9 +16,9 @@ class SignUpStore extends _SignUpStoreBase with _$SignUpStore {
 }
 
 abstract class _SignUpStoreBase with Store {
-  late ISignUpUseCase _signUpUseCase;
+  late final ISignUpUseCase _signUpUseCase;
 
-  late ReactionDisposer disposer;
+  ReactionDisposer? disposer;
 
   @observable
   SignUpState state = SignUpStateEmpty();
@@ -60,6 +60,6 @@ abstract class _SignUpStoreBase with Store {
 
   void dispose() {
     _signUpUseCase.dispose();
-    disposer();
+    if (disposer != null) disposer!();
   }
 }

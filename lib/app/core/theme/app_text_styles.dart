@@ -20,27 +20,27 @@ abstract class AppTextStyles {
 
 class AppTextStylesDefault implements AppTextStyles {
   @override
-  TextStyle get labelMedium => GoogleFonts.poppins(
+  TextStyle get labelMedium => GoogleFonts.inter(
         fontSize: 14,
         height: 21 / 24,
         fontWeight: FontWeight.normal,
       );
 
   @override
-  TextStyle get labelLarge => GoogleFonts.poppins(
+  TextStyle get labelLarge => GoogleFonts.inter(
         fontSize: 18,
         height: 21 / 24,
         fontWeight: FontWeight.normal,
       );
 
   @override
-  TextStyle get titleLarge => GoogleFonts.poppins(
+  TextStyle get titleLarge => GoogleFonts.inter(
         fontSize: 24,
         height: 36 / 24,
         fontWeight: FontWeight.normal,
       );
   @override
-  TextStyle get headlineMedium => GoogleFonts.poppins(
+  TextStyle get headlineMedium => GoogleFonts.inter(
         fontSize: 30,
         height: 45 / 30,
         fontWeight: FontWeight.normal,

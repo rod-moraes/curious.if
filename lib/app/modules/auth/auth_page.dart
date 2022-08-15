@@ -1,12 +1,16 @@
 import 'dart:math';
 
+import 'package:asuka/asuka.dart';
+import 'package:curious_if/app/modules/auth/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:mobx/mobx.dart';
 import '../../../shared/bottom_text_navigation_bar/bottom_text_navigation_bar.dart';
 import '../../../shared/snack_bar_info/snack_bar_info.dart';
 import '../../core/core.dart';
 import '../../domain/auth/model/auth_model.dart';
+import '../../global_store/user/user_store.dart';
 import 'auth_store.dart';
 import 'widgets/form_login/form_login.dart';
 
@@ -24,15 +28,20 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   final store = Modular.get<AuthStore>();
   final storeTheme = Modular.get<ThemeStore>();
+  final user = Modular.get<UserStore>();
 
   @override
   void initState() {
+    when(
+      (_) => store.state is AuthStateSuccess,
+      () => user.login((store.state as AuthStateSuccess).user),
+    );
     store.autoRun(showSnackBar);
     super.initState();
   }
 
   void showSnackBar(String text, bool isError) {
-    ScaffoldMessenger.of(context)
+    Asuka
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBarInfo(isError: isError, text: text));
   }
@@ -45,7 +54,6 @@ class _AuthPageState extends State<AuthPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("Aaaa TEste2");
     final isKeyboard = MediaQuery.of(context).viewInsets.bottom != 0;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: storeTheme.colorStatus,
